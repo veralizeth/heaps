@@ -13,21 +13,20 @@ class MinHeap
   end
 
   # This method adds a HeapNode instance to the heap
-  # Time Complexity: O(logn)
-  # Space Complexity: o(n)
+  # Time Complexity: O(log n)
+  # Space Complexity: o(log n)
   def add(key, value = key)
     @store << HeapNode.new(key, value)
     heap_up(@store.length - 1)
   end
-
   # This method removes and returns an element from the heap
   #   maintaining the heap structure
-  # Time Complexity: ?
-  # Space Complexity: ?
+  # Time Complexity: O(log n)
+  # Space Complexity: O(log n)
   def remove()
     swap(0, @store.length - 1)
     element = @store.pop
-    heap_down(0)
+    heap_down(0) unless @store.empty?
     element.value
   end
 
@@ -57,8 +56,8 @@ class MinHeap
   # This helper method takes an index and
   #  moves it up the heap, if it is less than it's parent node.
   #  It could be **very** helpful for the add method.
-  # Time complexity: O(logn
-  # Space complexity: o(n)
+  # Time complexity: O(log n)
+  # Space complexity: O(log n)
   def heap_up(index)
     parent_i = parent(index)
     # return if we reach the root element or if the parent is already greater than the child
@@ -81,13 +80,14 @@ class MinHeap
     left_i = left(index)
     right_i = right(index)
 
-    # If one of the nodes is greater than the lenght of the array return.
-    return if left_i > @store.length || right_i > @store.length
+    return if index == @store.length
 
-    if @store[index].key > @store[left_i].key and @store[index].key > @store[right_i].key
+    if right_i < @store.length
       min_index = @store[left_i].key < @store[right_i].key ? left_i : right_i
       swap(index, min_index)
       heap_down(min_index)
+    elsif left_i < @store.length
+      swap(index, left_i) if @store[index].key > @store[left_i].key
     end
   end
 
